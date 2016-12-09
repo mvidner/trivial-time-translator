@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+require "sinatra"
+
+# For demo purposes we could use a oneliner:
+#
+# get "/" { "Hello world" }
+#
+# but this server actually does something useful
+
+NAME = "The Trivial Time Translator"
+MYURL = "https://github.com/mvidner/trivial-time-translator"
+def footer
+  "\n<hr />\n" \
+  "<small>Powered by <a href='#{MYURL}'>#{NAME}</a></small>\n"
+end
+
+get "/" do
+  q = params["q"]
+
+  page = "<title>#{NAME}</title>\n"
+  page << "<p><b>#{NAME}</b></p>\n"
+
+  page << "
+  <form action='/' method='get'>
+    <p>Translate Unix time for humans
+    <input type='text' name='q' value='#{q}' autofocus />
+  </form>\n"
+
+  if q
+    human_time = Time.at(q.to_f).utc
+    page << "<hr />\n"
+    page << "<p>Unix time #{q} means #{human_time}\n"
+  end
+  page << footer
+
+  page
+end
